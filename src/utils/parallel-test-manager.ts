@@ -5,7 +5,7 @@ import { cleanTmpDir, cleanCheckpointDir, writeToTmpFile, readFile, saveCheckpoi
 import { runTest } from "./test-runner";
 import type { TestResult } from "./test-runner";
 import { calculatePassAtK, type HumanEvalResult } from "./humaneval";
-import { cleanCodeMarkdown } from "./code-cleaner";
+import { cleanCodeMarkdown, cleanGeneratedComponent } from "./code-cleaner";
 import { withRetry } from "./retry-wrapper";
 import crypto from "crypto";
 
@@ -142,13 +142,14 @@ async function runSingleTestSample(
     let generatedCode = await withRetry(
       async () => {
         const rawCode = await llmProvider.generateCode(prompt, temperature, contextContent);
-        const cleanedCode = cleanCodeMarkdown(rawCode);
-        
+        // High-level cleaning: remove markdown fences and <think> reasoning blocks
+        const cleanedCode = cleanGeneratedComponent(rawCode);
+
         if (!cleanedCode.trim()) {
           console.warn(`⚠️ Generated code is empty after cleaning for ${test.name} with ${providerName}`);
           throw new Error("Generated code is empty after cleaning");
         }
-        
+
         return cleanedCode;
       },
       {

@@ -25,3 +25,28 @@ export function cleanCodeMarkdown(code: string): string {
   // Trim whitespace from the beginning and end
   return cleanedCode.trim();
 }
+
+  /**
+   * Remove <think> ... </think> sections that some reasoning / thinking models emit.
+   * These sections are not valid Svelte/HTML for our benchmark and should be fully stripped
+   * before further processing / compilation. We remove both the tags and their inner content.
+   *
+   * This is a cautious non-greedy removal allowing for newlines and any attributes on the
+   * opening tag (though providers typically emit bare <think>). Multiple occurrences are removed.
+   */
+  export function stripThinkTags(code: string): string {
+    if (!code) return code;
+    return code.replace(/<think[^>]*>[\s\S]*?<\/think>/gi, "").trim();
+  }
+
+  /**
+   * High-level cleaner for LLM generated Svelte component code.
+   * - Strips markdown code fences
+   * - Removes <think> reasoning sections
+   * - Trims leading/trailing whitespace
+   */
+  export function cleanGeneratedComponent(code: string): string {
+    let result = cleanCodeMarkdown(code);
+    result = stripThinkTags(result);
+    return result.trim();
+  }

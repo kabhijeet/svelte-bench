@@ -72,6 +72,9 @@ export async function getLLMProvider(
     case "zai":
       const { ZAIProvider } = await import("./zai");
       return new ZAIProvider(modelId);
+    case "lmstudio":
+      const { LMStudioProvider } = await import("./lmstudio");
+      return new LMStudioProvider(modelId);
     default:
       throw new Error(`Unknown LLM provider: ${providerName}`);
   }
@@ -137,6 +140,21 @@ export async function getAllLLMProviders(): Promise<ProviderWithModel[]> {
       name: "Ollama",
       modelId,
     });
+  }
+
+  // LMStudio provider
+  try {
+    const lmstudioProvider = await getLLMProvider("lmstudio");
+    for (const modelId of lmstudioProvider.getModels()) {
+      const provider = await getLLMProvider("lmstudio", modelId);
+      providers.push({
+        provider,
+        name: "LMStudio",
+        modelId,
+      });
+    }
+  } catch (e) {
+    // Silent if LM Studio not running or dependency missing in environments where not installed
   }
 
   // Z.ai provider

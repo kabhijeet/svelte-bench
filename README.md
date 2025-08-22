@@ -8,6 +8,16 @@ An LLM benchmark for Svelte 5 based on the OpenAI methodology from OpenAIs paper
 
 SvelteBench evaluates LLM-generated Svelte components by testing them against predefined test suites. It works by sending prompts to LLMs, generating Svelte components, and verifying their functionality through automated tests.
 
+## Output Sanitization
+
+Before compiling generated components, SvelteBench performs automatic cleaning:
+
+- Strips markdown code fences (```svelte / ```html / ```js / bare ``` and stray backticks)
+- Removes reasoning blocks wrapped in `<think>...</think>` (case-insensitive) emitted by some "thinking" / reasoning models (content + tags are fully deleted)
+- Ensures `<svelte:options runes={true} />` is present at the top (injects if missing)
+
+This prevents Svelte parser errors caused by non-code reasoning output and keeps samples comparable across providers. If future models introduce different reasoning tag names, extend `stripThinkTags` (in `src/utils/code-cleaner.ts`) or generalize the pattern.
+
 ## Supported Providers
 
 SvelteBench supports multiple LLM providers:
@@ -16,6 +26,9 @@ SvelteBench supports multiple LLM providers:
 - **Anthropic** - Claude 3.5, Claude 4 models
 - **Google** - Gemini 2.5 models
 - **OpenRouter** - Access to multiple providers through a single API
+- **Ollama** - Local models via Ollama server (set `OLLAMA_HOST` optionally)
+- **LMStudio** - Local models served through LM Studio desktop/server (`LMSTUDIO_HOST`, `LMSTUDIO_MODEL`)
+- **Z.ai** - GLM family models
 
 ## Setup
 
@@ -43,6 +56,12 @@ GEMINI_API_KEY=your_gemini_api_key_here
 OPENROUTER_API_KEY=your_openrouter_api_key_here
 OPENROUTER_SITE_URL=https://github.com/khromov/svelte-bench  # Optional
 OPENROUTER_SITE_NAME=SvelteBench  # Optional
+
+# Ollama (optional local)
+OLLAMA_HOST=http://127.0.0.1:11434 # Optional, defaults shown
+
+# LM Studio (optional local)
+LMSTUDIO_MODEL=llama-3.2-1b-instruct   # Override default local model (LM Studio must be running)
 ```
 
 You only need to configure the providers you want to test with.
