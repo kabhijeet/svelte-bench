@@ -190,12 +190,25 @@ async function runBenchmark() {
       }
     }
 
-    // Set number of samples (use 10 samples by default unless a specific test was requested)
-    const numSamples = debugTest ? 1 : 10;
+    // Determine number of samples per test from environment (NUM_SAMPLES), default 1.
+    // If a specific debugTest is requested and NUM_SAMPLES not explicitly set, force to 1 for speed.
+    const envNumSamplesRaw = process.env.NUM_SAMPLES;
+    let numSamples: number;
+    if (envNumSamplesRaw && envNumSamplesRaw.trim().length > 0) {
+      const parsed = parseInt(envNumSamplesRaw, 10);
+      if (!isNaN(parsed) && parsed > 0) {
+        numSamples = parsed;
+      } else {
+        console.warn(`⚠️  Invalid NUM_SAMPLES='${envNumSamplesRaw}', falling back to default 1`);
+        numSamples = 1;
+      }
+    } else if (debugTest) {
+      numSamples = 1; // implicit optimization for single test debug runs
+    } else {
+      numSamples = 1; // default when not specified
+    }
 
-    console.log(
-      `👉 Running with ${numSamples} samples per test (for pass@k metrics)`
-    );
+    console.log(`👉 Running with ${numSamples} sample${numSamples === 1 ? '' : 's'} per test (configured via NUM_SAMPLES env, default 1)`);
 
     const allResults: HumanEvalResult[] = [];
 

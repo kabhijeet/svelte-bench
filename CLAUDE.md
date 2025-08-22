@@ -94,5 +94,22 @@ Copy `.env.example` to `.env` and configure API keys for desired providers:
 
 - Tests use Vitest with @testing-library/svelte for component testing
 - Each test runs with a 120-second timeout
-- Pass@k metrics are calculated using HumanEval methodology (10 samples per test by default, 1 for expensive models)
-- Results are saved to timestamped JSON files in `benchmarks/`
+- Pass@k metrics follow HumanEval methodology. By default **1 sample per test** is generated (low-cost fast iteration). Configure more with `NUM_SAMPLES` (e.g. 5, 10, 20) for more stable statistics.
+- `NUM_SAMPLES` is ignored (forced to 1) for expensive models whose IDs start with `o1-pro`.
+- `pass@10` is computed as `pass@min(10, n)` (n = valid samples).
+- Results are saved to timestamped JSON files in `benchmarks/`.
+
+### Sample Count Control
+
+```bash
+# Run each test with 5 samples
+NUM_SAMPLES=5 pnpm start
+
+# Classic HumanEval-style 10 samples
+NUM_SAMPLES=10 pnpm start
+
+# Parallel with 8 samples
+PARALLEL_EXECUTION=true NUM_SAMPLES=8 pnpm start
+```
+
+If `DEBUG_TEST` is set and `NUM_SAMPLES` is not provided, execution uses 1 sample automatically.

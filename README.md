@@ -111,6 +111,27 @@ DEBUG_MODEL=claude-3-7-sonnet-20250219,claude-opus-4-20250514,claude-sonnet-4-20
 
 This will run tests with all three models sequentially while still staying within the same provider.
 
+### Controlling Number of Samples (NUM_SAMPLES)
+
+By default SvelteBench now generates **1 sample per test** (minimizing cost and speeding up iteration). You can increase this using the `NUM_SAMPLES` environment variable to obtain more stable pass@k metrics.
+
+```bash
+# Run each test with 5 samples
+NUM_SAMPLES=5 npm start
+
+# Run each test with 10 samples (classic HumanEval style)
+NUM_SAMPLES=10 npm start
+
+# Parallel example
+PARALLEL_EXECUTION=true NUM_SAMPLES=8 npm start
+```
+
+Notes:
+- If `DEBUG_TEST` is set and `NUM_SAMPLES` is NOT provided, it stays at 1 for faster debugging.
+- Expensive models whose IDs start with `o1-pro` are automatically limited to 1 sample even if a higher value is configured.
+- `pass@10` is computed as `pass@min(10, n)` where `n` is the number of valid samples returned.
+- Checkpointing works regardless of the value: partial progress is saved after each sample.
+
 ### Running with Context
 
 You can provide a context file (like Svelte documentation) to help the LLM generate better components:

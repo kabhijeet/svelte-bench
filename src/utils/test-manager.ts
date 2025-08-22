@@ -215,7 +215,7 @@ export async function runSingleTest(
 export async function runHumanEvalTest(
   test: TestDefinition,
   llmProvider: LLMProvider,
-  numSamples: number = 10,
+  numSamples: number = 1,
   contextContent?: string,
   providerName?: string,
   modelId?: string,
@@ -388,13 +388,13 @@ export async function runHumanEvalTest(
  * Run all tests with the given LLM provider using HumanEval methodology
  * Supports automatic resuming from checkpoints
  * @param llmProvider The LLM provider to use
- * @param numSamples Number of samples to generate for each test (default: 10)
+ * @param numSamples Number of samples to generate for each test (default: 1; override with NUM_SAMPLES env var)
  * @param specificTests Optional array of test definitions to run (default: all tests)
  * @param contextContent Optional context content to include in prompts
  */
 export async function runAllTestsHumanEval(
   llmProvider: LLMProvider,
-  numSamples: number = 10,
+  numSamples: number = 1,
   specificTests?: TestDefinition[],
   contextContent?: string
 ): Promise<HumanEvalResult[]> {

@@ -341,7 +341,7 @@ async function runTestSamplesInParallelWithCheckpointing(
 export async function runHumanEvalTest(
   test: TestDefinition,
   llmProvider: LLMProvider,
-  numSamples: number = 10,
+  numSamples: number = 1,
   contextContent?: string,
   testIndex?: number,
   completedResults?: HumanEvalResult[],
@@ -452,7 +452,7 @@ export async function runHumanEvalTest(
  */
 export async function runAllTestsHumanEval(
   llmProvider: LLMProvider,
-  numSamples: number = 10,
+  numSamples: number = 1,
   specificTests?: TestDefinition[],
   contextContent?: string
 ): Promise<HumanEvalResult[]> {
