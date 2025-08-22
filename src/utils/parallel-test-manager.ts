@@ -48,12 +48,24 @@ export async function loadTestDefinitions(): Promise<TestDefinition[]> {
   const testDirs = await fs.readdir(testsDir);
 
   const tests: TestDefinition[] = [];
+  // Allow skipping specific tests via SKIP_TESTS env var (comma-separated)
+  const skipEnv = process.env.SKIP_TESTS || "";
+  const skipped = new Set(
+    skipEnv
+      .split(",")
+      .map((s) => s.trim().toLowerCase())
+      .filter((s) => s.length > 0)
+  );
 
   for (const dir of testDirs) {
     const testDir = path.join(testsDir, dir);
     const stats = await fs.stat(testDir);
 
     if (stats.isDirectory()) {
+      if (skipped.has(dir.toLowerCase())) {
+        console.log(`⏭️  Skipping test directory '${dir}' (listed in SKIP_TESTS)`);
+        continue;
+      }
       const promptPath = path.join(testDir, "prompt.md");
       const testPath = path.join(testDir, "test.ts");
 
