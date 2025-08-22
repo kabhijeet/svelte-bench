@@ -66,6 +66,14 @@ PARALLEL_EXECUTION=true
 
 Multiple models can be specified: `DEBUG_MODEL=model1,model2,model3`
 
+You can also skip specific benchmark tests by directory name:
+
+```bash
+SKIP_TESTS=inspect,experimental-widget
+```
+
+This will exclude those folders in `src/tests/` from all benchmark and verification runs.
+
 ## Test Structure
 
 Each test in `src/tests/` requires:

@@ -75,6 +75,17 @@ npm start
 
 **NOTE: This will run all providers and models that are available!**
 
+### Skipping Specific Tests
+
+You can skip one or more test directories via the `SKIP_TESTS` environment variable (comma‑separated list). Each entry should match the folder name under `src/tests/`.
+
+```bash
+# Skip the 'inspect' test (commonly skipped) and an experimental test
+SKIP_TESTS=inspect,experimental-widget npm start
+```
+
+This affects both sequential and parallel execution modes as well as `verify.ts`. If `DEBUG_TEST` points to a skipped test, a warning is printed and it is ignored.
+
 ### Debug Mode
 
 For faster development, or to run just one provider/model, you can enable debug mode in your `.env` file:

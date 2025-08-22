@@ -150,6 +150,17 @@ async function runBenchmark() {
     }
 
     const debugTest = process.env.DEBUG_TEST;
+    // Parse skipped tests early for debug clarity
+    const skipEnv = process.env.SKIP_TESTS || "";
+    const skippedTests = new Set(
+      skipEnv
+        .split(",")
+        .map((s) => s.trim().toLowerCase())
+        .filter((s) => s.length > 0)
+    );
+    if (debugTest && skippedTests.has(debugTest.toLowerCase())) {
+      console.warn(`⚠️  DEBUG_TEST='${debugTest}' is listed in SKIP_TESTS and will be ignored.`);
+    }
 
     // Load test definitions based on debug mode
     let testDefinitions = undefined;
@@ -166,6 +177,9 @@ async function runBenchmark() {
           testDefinitions = [matchingTest];
           console.log(`👉 Selected test: ${matchingTest.name}`);
         } else {
+          if (debugTest && skippedTests.has(debugTest.toLowerCase())) {
+            console.warn(`⚠️  The requested DEBUG_TEST '${debugTest}' was skipped via SKIP_TESTS. No tests will run unless you remove it from SKIP_TESTS.`);
+          }
           console.warn(`⚠️ Test "${debugTest}" not found, using all tests`);
           testDefinitions = undefined; // Use all tests
         }
