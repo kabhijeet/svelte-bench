@@ -5,7 +5,7 @@ import { cleanTmpDir, cleanCheckpointDir, writeToTmpFile, readFile, saveCheckpoi
 import { runTest } from "./test-runner";
 import type { TestResult } from "./test-runner";
 import { calculatePassAtK, type HumanEvalResult } from "./humaneval";
-import { cleanCodeMarkdown } from "./code-cleaner";
+import { cleanGeneratedComponent } from "./code-cleaner";
 import { withRetry } from "./retry-wrapper";
 
 export interface TestDefinition {
@@ -102,8 +102,8 @@ export async function runSingleTest(
       async () => {
         const rawCode = await llmProvider.generateCode(prompt, temperature, contextContent);
         
-        // Apply cleaning to remove markdown code blocks
-        const cleanedCode = cleanCodeMarkdown(rawCode);
+  // High-level cleaning: remove markdown fences and <think> reasoning blocks
+  const cleanedCode = cleanGeneratedComponent(rawCode);
         
         // Check if the cleaned code is empty or only whitespace
         if (!cleanedCode.trim()) {
