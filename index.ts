@@ -14,6 +14,7 @@ import {
 import type { HumanEvalResult } from "./src/utils/humaneval";
 import { ensureRequiredDirectories } from "./src/utils/ensure-dirs";
 import { validateModels } from "./src/utils/model-validator";
+import fs from "fs/promises";
 import path from "path";
 
 /**
@@ -21,21 +22,27 @@ import path from "path";
  * @returns Parsed command line arguments
  */
 function parseCommandLineArgs(): {
-  contextFile?: string;
+  contextFiles?: string[];
 } {
   const args = process.argv.slice(2);
-  let contextFile: string | undefined;
+  const contextFiles: string[] = [];
 
   // Parse arguments
   for (let i = 0; i < args.length; i++) {
     if (args[i] === "--context" && i + 1 < args.length) {
-      contextFile = args[i + 1];
+      const next = args[i + 1];
       i++; // Skip the next argument as it's the value for --context
+      // Support comma-separated list in a single flag and repeated --context flags
+      const parts = next
+        .split(",")
+        .map((p) => p.trim())
+        .filter((p) => p.length > 0);
+      contextFiles.push(...parts);
     }
   }
 
   return {
-    contextFile,
+    contextFiles: contextFiles.length > 0 ? contextFiles : undefined,
   };
 }
 
@@ -45,7 +52,7 @@ function parseCommandLineArgs(): {
 async function runBenchmark() {
   try {
     // Parse command line arguments
-    const { contextFile } = parseCommandLineArgs();
+    const { contextFiles } = parseCommandLineArgs();
     
     // Check for parallel execution environment variable
     const parallel = process.env.PARALLEL_EXECUTION === "true";
@@ -53,16 +60,54 @@ async function runBenchmark() {
     const executionMode = parallel ? "PARALLEL EXECUTION" : "SEQUENTIAL EXECUTION";
     console.log(`🚀 Starting SvelteBench with HumanEval methodology (${executionMode})...`);
 
-    // Load context file if specified
+    // Load context files or directories if specified (supports multiple files, folders, and comma-separated lists)
     let contextContent = "";
-    if (contextFile) {
+    // This string is used when saving results to provide the filename(s)
+    let contextFilesStr: string | undefined;
+    if (contextFiles && contextFiles.length > 0) {
       try {
-        // Resolve path relative to the current working directory
-        const contextFilePath = path.resolve(process.cwd(), contextFile);
-        contextContent = await loadContextFile(contextFilePath);
-        console.log(`👉 Using context file: ${contextFilePath}`);
+        const loaded: string[] = [];
+        for (const f of contextFiles) {
+          // Resolve path relative to the current working directory
+          const contextPath = path.resolve(process.cwd(), f);
+          const stat = await fs.stat(contextPath);
+          if (stat.isDirectory()) {
+            console.log(`📁 Loading context directory: ${contextPath}`);
+            const entries = await fs.readdir(contextPath);
+            if (entries.length === 0) {
+              console.warn(`⚠️ Context directory ${contextPath} is empty`);
+              continue;
+            }
+            // Read files in the directory (non-recursive). Preserve sort order for determinism.
+            entries.sort();
+            for (const entry of entries) {
+              const entryPath = path.join(contextPath, entry);
+              const entryStat = await fs.stat(entryPath);
+              if (entryStat.isFile()) {
+                const content = await loadContextFile(entryPath);
+                loaded.push(content);
+                console.log(`  ➕ Loaded: ${entryPath}`);
+              }
+            }
+          } else if (stat.isFile()) {
+            const content = await loadContextFile(contextPath);
+            loaded.push(content);
+            console.log(`📄 Loaded context file: ${contextPath}`);
+          } else {
+            console.warn(`⚠️ Skipping unsupported context path: ${contextPath}`);
+          }
+        }
+        if (loaded.length > 0) {
+          // Join multiple context files with spacing so prompts remain readable
+          contextContent = loaded.join("\n\n");
+          contextFilesStr = contextFiles.join(",");
+        } else {
+          // No files loaded - leave contextContent empty but set string for metadata
+          contextFilesStr = contextFiles.join(",");
+          console.warn("⚠️ No context files were loaded (empty directories or unsupported paths)");
+        }
       } catch (error) {
-        console.error(`Error loading context file: ${error}`);
+        console.error(`Error loading context files: ${error}`);
         process.exit(1);
       }
     }
@@ -242,7 +287,7 @@ async function runBenchmark() {
           // Save individual model results immediately to prevent loss if later models fail
           if (results.length > 0) {
             try {
-              await saveBenchmarkResults(results, contextFile, contextContent);
+              await saveBenchmarkResults(results, contextFilesStr, contextContent);
               console.log(`💾 Saved individual results for ${providerWithModel.modelId}`);
             } catch (saveError) {
               console.error(`⚠️  Failed to save individual results for ${providerWithModel.modelId}:`, saveError);
@@ -300,7 +345,7 @@ async function runBenchmark() {
           // Save individual model results immediately to prevent loss if later models fail
           if (results.length > 0) {
             try {
-              await saveBenchmarkResults(results, contextFile, contextContent);
+              await saveBenchmarkResults(results, contextFilesStr, contextContent);
               console.log(`💾 Saved individual results for ${providerWithModel.modelId}`);
             } catch (saveError) {
               console.error(`⚠️  Failed to save individual results for ${providerWithModel.modelId}:`, saveError);
