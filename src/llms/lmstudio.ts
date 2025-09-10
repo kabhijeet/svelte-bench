@@ -86,7 +86,26 @@ export class LMStudioProvider implements LLMProvider {
   }
 
   getModels(): string[] {
-    return [...this.availableModels];
+    // Prioritize models in this order:
+    // 1. model specified to constructor (this.modelId)
+    // 2. LMSTUDIO_MODEL environment variable
+    // 3. curated availableModels
+    const models: string[] = [];
+
+    if (this.modelId && !models.includes(this.modelId)) {
+      models.push(this.modelId);
+    }
+
+    const envModel = process.env.LMSTUDIO_MODEL;
+    if (envModel && !models.includes(envModel)) {
+      models.push(envModel);
+    }
+
+    for (const m of this.availableModels) {
+      if (!models.includes(m)) models.push(m);
+    }
+
+    return models;
   }
 
   getModelIdentifier(): string {

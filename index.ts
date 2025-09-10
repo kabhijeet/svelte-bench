@@ -127,17 +127,49 @@ async function runBenchmark() {
       console.log("🐛 Running in DEBUG_MODE");
 
       // Get debug settings
-      const debugProvider = process.env.DEBUG_PROVIDER;
-      const debugModel = process.env.DEBUG_MODEL;
+      let debugProvider = process.env.DEBUG_PROVIDER;
+  let debugModel = process.env.DEBUG_MODEL;
+
+      // If DEBUG_PROVIDER is not specified, attempt to auto-select a sensible default.
+      // Prefer local/offline providers (lmstudio, ollama) so users can run without cloud API keys.
+      if (!debugProvider) {
+        const preferred = ["lmstudio", "ollama", "openrouter", "openai", "anthropic", "google", "zai"];
+        for (const p of preferred) {
+          try {
+            // Try to construct provider with a lightweight call to validate availability
+            // eslint-disable-next-line no-await-in-loop
+            const candidate = await getLLMProvider(p);
+            if (candidate) {
+              debugProvider = p;
+              console.log(`👉 Auto-selected DEBUG_PROVIDER='${debugProvider}'`);
+              break;
+            }
+          } catch (e) {
+            // ignore and try next
+          }
+        }
+      }
 
       if (!debugProvider) {
         throw new Error("DEBUG_PROVIDER must be specified in debug mode");
       }
 
       if (!debugModel) {
-        throw new Error(
-          `No model specified for provider "${debugProvider}". Use DEBUG_MODEL to specify models.`
-        );
+        // Attempt to auto-select a model for the chosen provider by querying its available models
+        try {
+          const candidateProvider = await getLLMProvider(debugProvider);
+          const models = candidateProvider.getModels();
+          if (models && models.length > 0) {
+            debugModel = models[0];
+            console.log(`👉 Auto-selected DEBUG_MODEL='${debugModel}' for provider '${debugProvider}'`);
+          } else {
+            throw new Error(`No models available for provider '${debugProvider}'`);
+          }
+        } catch (e) {
+          throw new Error(
+            `No model specified for provider "${debugProvider}" and auto-selection failed. Use DEBUG_MODEL to specify models.`
+          );
+        }
       }
 
       // Parse comma-separated list of models

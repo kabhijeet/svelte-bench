@@ -86,60 +86,80 @@ export async function getLLMProvider(
  */
 export async function getAllLLMProviders(): Promise<ProviderWithModel[]> {
   const providers: ProviderWithModel[] = [];
-
+  // Try each provider and skip those that can't be constructed (missing API keys or not available)
   // OpenAI provider
-  const openaiProvider = await getLLMProvider("openai");
-  for (const modelId of openaiProvider.getModels()) {
-    const provider = await getLLMProvider("openai", modelId);
-    providers.push({
-      provider,
-      name: "OpenAI",
-      modelId,
-    });
+  try {
+    const openaiProvider = await getLLMProvider("openai");
+    for (const modelId of openaiProvider.getModels()) {
+      const provider = await getLLMProvider("openai", modelId);
+      providers.push({
+        provider,
+        name: "OpenAI",
+        modelId,
+      });
+    }
+  } catch (e) {
+    // Skip OpenAI if not configured
   }
 
   // Anthropic provider
-  const anthropicProvider = await getLLMProvider("anthropic");
-  for (const modelId of anthropicProvider.getModels()) {
-    const provider = await getLLMProvider("anthropic", modelId);
-    providers.push({
-      provider,
-      name: "Anthropic",
-      modelId,
-    });
+  try {
+    const anthropicProvider = await getLLMProvider("anthropic");
+    for (const modelId of anthropicProvider.getModels()) {
+      const provider = await getLLMProvider("anthropic", modelId);
+      providers.push({
+        provider,
+        name: "Anthropic",
+        modelId,
+      });
+    }
+  } catch (e) {
+    // Skip Anthropic if not configured
   }
 
   // Google provider
-  const googleProvider = await getLLMProvider("google");
-  for (const modelId of googleProvider.getModels()) {
-    const provider = await getLLMProvider("google", modelId);
-    providers.push({
-      provider,
-      name: "Google",
-      modelId,
-    });
+  try {
+    const googleProvider = await getLLMProvider("google");
+    for (const modelId of googleProvider.getModels()) {
+      const provider = await getLLMProvider("google", modelId);
+      providers.push({
+        provider,
+        name: "Google",
+        modelId,
+      });
+    }
+  } catch (e) {
+    // Skip Google if not configured
   }
 
   // OpenRouter provider
-  const openrouterProvider = await getLLMProvider("openrouter");
-  for (const modelId of openrouterProvider.getModels()) {
-    const provider = await getLLMProvider("openrouter", modelId);
-    providers.push({
-      provider,
-      name: "OpenRouter",
-      modelId,
-    });
+  try {
+    const openrouterProvider = await getLLMProvider("openrouter");
+    for (const modelId of openrouterProvider.getModels()) {
+      const provider = await getLLMProvider("openrouter", modelId);
+      providers.push({
+        provider,
+        name: "OpenRouter",
+        modelId,
+      });
+    }
+  } catch (e) {
+    // Skip OpenRouter if not configured
   }
 
   // Ollama provider
-  const ollamaProvider = await getLLMProvider("ollama");
-  for (const modelId of ollamaProvider.getModels()) {
-    const provider = await getLLMProvider("ollama", modelId);
-    providers.push({
-      provider,
-      name: "Ollama",
-      modelId,
-    });
+  try {
+    const ollamaProvider = await getLLMProvider("ollama");
+    for (const modelId of ollamaProvider.getModels()) {
+      const provider = await getLLMProvider("ollama", modelId);
+      providers.push({
+        provider,
+        name: "Ollama",
+        modelId,
+      });
+    }
+  } catch (e) {
+    // Skip Ollama if not configured
   }
 
   // LMStudio provider
@@ -158,14 +178,18 @@ export async function getAllLLMProviders(): Promise<ProviderWithModel[]> {
   }
 
   // Z.ai provider
-  const zaiProvider = await getLLMProvider("zai");
-  for (const modelId of zaiProvider.getModels()) {
-    const provider = await getLLMProvider("zai", modelId);
-    providers.push({
-      provider,
-      name: "Z.ai",
-      modelId,
-    });
+  try {
+    const zaiProvider = await getLLMProvider("zai");
+    for (const modelId of zaiProvider.getModels()) {
+      const provider = await getLLMProvider("zai", modelId);
+      providers.push({
+        provider,
+        name: "Z.ai",
+        modelId,
+      });
+    }
+  } catch (e) {
+    // Skip Z.ai if not configured
   }
 
   return providers;
