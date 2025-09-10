@@ -154,14 +154,23 @@ async function runSingleTestSample(
     let generatedCode = await withRetry(
       async () => {
         const rawCode = await llmProvider.generateCode(prompt, temperature, contextContent);
-        // High-level cleaning: remove markdown fences and <think> reasoning blocks
+        // High-level cleaning: remove markdown fences, ChatML tokens, and <think> reasoning blocks
         const cleanedCode = cleanGeneratedComponent(rawCode);
-
+ 
+        // Small preview helper to reduce log noise
+        const preview = (s: string, n = 500) =>
+          typeof s === "string" && s.length > n ? s.slice(0, n) + "...[truncated]" : s;
+ 
+        if (sampleIndex === 0) {
+          console.log(`🔍 [Debug] ${test.name} rawCode preview (${providerName}):`, preview(rawCode));
+          console.log(`🔍 [Debug] ${test.name} cleanedCode preview (${providerName}):`, preview(cleanedCode));
+        }
+ 
         if (!cleanedCode.trim()) {
-          console.warn(`⚠️ Generated code is empty after cleaning for ${test.name} with ${providerName}`);
+          console.warn(`⚠️ Generated code is empty after cleaning for ${test.name} with ${providerName}. Raw preview:`, preview(rawCode));
           throw new Error("Generated code is empty after cleaning");
         }
-
+ 
         return cleanedCode;
       },
       {
