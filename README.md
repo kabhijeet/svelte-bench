@@ -141,6 +141,11 @@ You can provide a context file (like Svelte documentation) to help the LLM gener
 npm run run-tests -- --context ./context/svelte.dev/llms-small.txt && npm run build
 ```
 
+```bash
+# Run with a context folder
+npm run run-tests -- --context ./best-practices/
+```
+
 The context file will be included in the prompt to the LLM, providing additional information for generating components.
 
 ## Visualizing Results
