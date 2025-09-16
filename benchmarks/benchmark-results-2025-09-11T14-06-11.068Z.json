@@ -1,0 +1,221 @@
+[
+  {
+    "testName": "counter",
+    "provider": "LMStudio",
+    "modelId": "qwen/qwen3-4b-2507",
+    "numSamples": 1,
+    "numCorrect": 0,
+    "pass1": 0,
+    "pass10": 0,
+    "context": {
+      "used": false,
+      "content": ""
+    },
+    "samples": [
+      {
+        "index": 0,
+        "code": "<svelte:options runes={true} />\n\n<script>\n  let count = 0;\n\n  function increment() {\n    count++;\n  }\n\n  function decrement() {\n    count--;\n  }\n</script>\n\n<div class=\"counter\">\n  <button data-testid=\"decrement-button\" on:click={decrement}>-</button>\n  <span data-testid=\"count-value\">{count}</span>\n  <button data-testid=\"increment-button\" on:click={increment}>+</button>\n</div>",
+        "success": false,
+        "errors": [
+          "\u001b[2mexpect(\u001b[22m\u001b[31melement\u001b[39m\u001b[2m).toHaveTextContent()\u001b[22m\n\nExpected element to have text content:\n\u001b[32m  1\u001b[39m\nReceived:\n\u001b[31m  0\u001b[39m",
+          "\u001b[2mexpect(\u001b[22m\u001b[31melement\u001b[39m\u001b[2m).toHaveTextContent()\u001b[22m\n\nExpected element to have text content:\n\u001b[32m  -1\u001b[39m\nReceived:\n\u001b[31m  0\u001b[39m",
+          "\u001b[2mexpect(\u001b[22m\u001b[31melement\u001b[39m\u001b[2m).toHaveTextContent()\u001b[22m\n\nExpected element to have text content:\n\u001b[32m  2\u001b[39m\nReceived:\n\u001b[31m  0\u001b[39m"
+        ],
+        "temperature": 0
+      }
+    ]
+  },
+  {
+    "testName": "derived",
+    "provider": "LMStudio",
+    "modelId": "qwen/qwen3-4b-2507",
+    "numSamples": 1,
+    "numCorrect": 0,
+    "pass1": 0,
+    "pass10": 0,
+    "context": {
+      "used": false,
+      "content": ""
+    },
+    "samples": [
+      {
+        "index": 0,
+        "code": "<svelte:options runes={true} />\n\n<div>\n  <p data-testid=\"number-value\">Number: {$state}</p>\n  <p data-testid=\"doubled-value\">Doubled: {$derived(2 * $state)}</p>\n  <button data-testid=\"increment-button\" on:click={() => $state++}>Increment</button>\n</div>",
+        "success": false,
+        "errors": [
+          "tmp/samples/lmstudio/Component.svelte:4:41 Cannot use rune without parentheses\nhttps://svelte.dev/e/rune_missing_parentheses"
+        ],
+        "temperature": 0
+      }
+    ]
+  },
+  {
+    "testName": "derived-by",
+    "provider": "LMStudio",
+    "modelId": "qwen/qwen3-4b-2507",
+    "numSamples": 1,
+    "numCorrect": 0,
+    "pass1": 0,
+    "pass10": 0,
+    "context": {
+      "used": false,
+      "content": ""
+    },
+    "samples": [
+      {
+        "index": 0,
+        "code": "<svelte:options runes={true} />\n\n<div>\n  <input data-testid=\"text-input\" type=\"text\" bind:value={$state.text} />\n  <button data-testid=\"clear-button\" on:click={() => $state.text = ''}>Clear</button>\n  <div>\n    <p data-testid=\"word-count\">Words: {$derived.by(() => $state.text.split(/\\s+/).filter(word => word.length > 0).length)}</p>\n    <p data-testid=\"char-count\">Characters: {$derived.by(() => $state.text.length)}</p>\n    <p data-testid=\"length-indicator\">Status: {$derived.by(() => $state.text.split(/\\s+/).filter(word => word.length > 0).length > 15 ? 'Long text' : 'Short text')}</p>\n  </div>\n</div>",
+        "success": false,
+        "errors": [
+          "tmp/samples/lmstudio/Component.svelte:4:46 `$state.text` is not a valid rune\nhttps://svelte.dev/e/rune_invalid_name"
+        ],
+        "temperature": 0
+      }
+    ]
+  },
+  {
+    "testName": "each",
+    "provider": "LMStudio",
+    "modelId": "qwen/qwen3-4b-2507",
+    "numSamples": 1,
+    "numCorrect": 0,
+    "pass1": 0,
+    "pass10": 0,
+    "context": {
+      "used": false,
+      "content": ""
+    },
+    "samples": [
+      {
+        "index": 0,
+        "code": "<svelte:options runes={true} />\n\n<div>\n  <ul data-testid=\"characters-list\">\n    {#each ['Jerry', 'Elaine', 'Kramer'] as character}\n      <li data-testid=\"character\">{character}</li>\n    {/each}\n  </ul>\n  <button data-testid=\"add-george-button\" on:click={() => $state.characters.push('George')}>\n  </button>\n</div>",
+        "success": false,
+        "errors": [
+          "tmp/samples/lmstudio/Component.svelte:9:58 `$state.characters` is not a valid rune\nhttps://svelte.dev/e/rune_invalid_name"
+        ],
+        "temperature": 0
+      }
+    ]
+  },
+  {
+    "testName": "effect",
+    "provider": "LMStudio",
+    "modelId": "qwen/qwen3-4b-2507",
+    "numSamples": 1,
+    "numCorrect": 0,
+    "pass1": 0,
+    "pass10": 0,
+    "context": {
+      "used": false,
+      "content": ""
+    },
+    "samples": [
+      {
+        "index": 0,
+        "code": "<svelte:options runes={true} />\n\n<div>\n  <p data-testid=\"number-value\">Number: {number}</p>\n  <p data-testid=\"doubled-value\">Doubled: {doubled}</p>\n  <button data-testid=\"increment-button\" on:click={() => number++}>Increment</button>\n</div>",
+        "success": false,
+        "errors": [
+          "number is not defined\n\n\tin <unknown>\n",
+          "number is not defined\n\n\tin <unknown>\n"
+        ],
+        "temperature": 0
+      }
+    ]
+  },
+  {
+    "testName": "hello-world",
+    "provider": "LMStudio",
+    "modelId": "qwen/qwen3-4b-2507",
+    "numSamples": 1,
+    "numCorrect": 0,
+    "pass1": 0,
+    "pass10": 0,
+    "context": {
+      "used": false,
+      "content": ""
+    },
+    "samples": [
+      {
+        "index": 0,
+        "code": "<svelte:options runes={true} />\n\n<div data-testid=\"greeting\" class=\"greeting\">\n</div>\n\n<style>\n</style>",
+        "success": false,
+        "errors": [
+          "\u001b[2mexpect(\u001b[22m\u001b[31melement\u001b[39m\u001b[2m).toHaveTextContent()\u001b[22m\n\nExpected element to have text content:\n\u001b[32m  Hello, World!\u001b[39m\nReceived:\n\u001b[31m\u001b[39m"
+        ],
+        "temperature": 0
+      }
+    ]
+  },
+  {
+    "testName": "inspect",
+    "provider": "LMStudio",
+    "modelId": "qwen/qwen3-4b-2507",
+    "numSamples": 1,
+    "numCorrect": 0,
+    "pass1": 0,
+    "pass10": 0,
+    "context": {
+      "used": false,
+      "content": ""
+    },
+    "samples": [
+      {
+        "index": 0,
+        "code": "<svelte:options runes={true} />\n\n<div>\n  <input data-testid=\"text-input\" type=\"text\" bind:value={$state(text)} />\n  <p data-testid=\"text-value\">Current text: {$inspect(text)}</p>\n  <p data-testid=\"char-count\">Character count: {text.length}</p>\n</div>\n<script>\n  let text = \"Hello world\";\n\n  $inspect(text).with((value) => {\n    console.log(\"Text updated to:\", value);\n  });\n\n  $effect(() => {\n    $inspect.trace(() => {\n      console.log(\"Trace: text value changed to\", text);\n    });\n  });\n</script>",
+        "success": false,
+        "errors": [
+          "tmp/samples/lmstudio/Component.svelte:4:46 Can only bind to an Identifier or MemberExpression or a `{get, set}` pair\nhttps://svelte.dev/e/bind_invalid_expression"
+        ],
+        "temperature": 0
+      }
+    ]
+  },
+  {
+    "testName": "props",
+    "provider": "LMStudio",
+    "modelId": "qwen/qwen3-4b-2507",
+    "numSamples": 1,
+    "numCorrect": 0,
+    "pass1": 0,
+    "pass10": 0,
+    "context": {
+      "used": false,
+      "content": ""
+    },
+    "samples": [
+      {
+        "index": 0,
+        "code": "<svelte:options runes={true} />\n\n<script>\n  import { $props, $state } from 'svelte';\n\n  const { name = 'World', count = 0, showDetails = false } = $props;\n  const $count = $state(count);\n\n  function increment() {\n    $count += 1;\n  }\n</script>\n\n<div>\n  <h1 data-testid=\"name-display\">{name}</h1>\n  <p data-testid=\"count-display\">Count: {$count}</p>\n  <button data-testid=\"increment-button\" on:click={increment}>Increment</button>\n\n  <div data-testid=\"details\" if={showDetails}>\n    <p>Name is {name}</p>\n    <p>Count is {$count}</p>\n    <p>ShowDetails is {showDetails}</p>\n  </div>\n</div>",
+        "success": false,
+        "errors": [
+          "/Users/Abhijeet.Karpe/apps/svelte-bench/tmp/samples/lmstudio/Component.svelte:4:11 The $ prefix is reserved, and cannot be used for variables and imports\nhttps://svelte.dev/e/dollar_prefix_invalid"
+        ],
+        "temperature": 0
+      }
+    ]
+  },
+  {
+    "testName": "snippets",
+    "provider": "LMStudio",
+    "modelId": "qwen/qwen3-4b-2507",
+    "numSamples": 1,
+    "numCorrect": 0,
+    "pass1": 0,
+    "pass10": 0,
+    "context": {
+      "used": false,
+      "content": ""
+    },
+    "samples": [
+      {
+        "index": 0,
+        "code": "<svelte:options runes={true} />\n\n<script>\n  const books = [\"The Lord of the Rings\", \"To Kill a Mockingbird\", \"1984\"];\n\n  const title = (title) => {\n    return (\n      <span data-testid=\"book-title\">{title}</span>\n    );\n  };\n</script>\n\n<ul>\n  {#each books as book}\n    <li data-testid=\"book-item\">\n      {@render title book}\n    </li>\n  {/each}\n</ul>",
+        "success": false,
+        "errors": [
+          "/Users/Abhijeet.Karpe/apps/svelte-bench/tmp/samples/lmstudio/Component.svelte:8:6 Unexpected token\nhttps://svelte.dev/e/js_parse_error"
+        ],
+        "temperature": 0
+      }
+    ]
+  }
+]

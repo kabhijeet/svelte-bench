@@ -1,0 +1,219 @@
+[
+  {
+    "testName": "counter",
+    "provider": "LMStudio",
+    "modelId": "openai/gpt-oss-20b",
+    "numSamples": 1,
+    "numCorrect": 0,
+    "pass1": 0,
+    "pass10": 0,
+    "context": {
+      "used": false,
+      "content": ""
+    },
+    "samples": [
+      {
+        "index": 0,
+        "code": "<svelte:options runes={true} />\n\n<script>\n  const count = $state(0);\n  function increment() { count += 1; }\n  function decrement() { count -= 1; }\n</script>\n\n\n<div class=\"counter\">\n  <button data-testid=\"decrement-button\" on:click={decrement}>-</button>\n  <span data-testid=\"count-value\">{count}</span>\n  <button data-testid=\"increment-button\" on:click={increment}>+</button>\n</div>\n\n\n<style>\n</style>\n\n\n\n\n\n\n\n\n<script>\n  const count = $state(0);\n  function increment() { count += 1; }\n  function decrement() { count -= 1; }\n</script>\n\n<div class=\"counter\">\n  <button data-testid=\"decrement-button\" on:click={decrement}>-</button>\n  <span data-testid=\"count-value\">{count}</span>\n  <button data-testid=\"increment-button\" on:click={increment}>+</button>\n</div>\n\n<style>\n</style>\n\n\n\n\n\n\n\n<script>\n  const count = $state(0);\n  function increment() { count += 1; }\n  function decrement() { count -= 1; }\n</script>\n\n<div class=\"counter\">\n  <button data-testid=\"decrement-button\" on:click={decrement}>-</button>\n  <span data-testid=\"count-value\">{count}</span>\n  <button data-testid=\"increment-button\" on:click={increment}>+</button>\n</div>\n\n<style>\n</style>\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n<div class=\"counter\">\n  <button data-testid=\"decrement-button\" on:click={decrement}>-</button>\n  <span data-testid=\"count-value\">{count}</span>\n  <button data-testid=\"increment-button\" on:click={increment}>+</button>\n</div>\n\n<style>\n</style>",
+        "success": false,
+        "errors": [
+          "/Users/Abhijeet.Karpe/apps/svelte-bench/tmp/samples/lmstudio/Component.svelte:27:0 A component can have a single top-level `<script>` element and/or a single top-level `<script module>` element\nhttps://svelte.dev/e/script_duplicate"
+        ],
+        "temperature": 0
+      }
+    ]
+  },
+  {
+    "testName": "derived",
+    "provider": "LMStudio",
+    "modelId": "openai/gpt-oss-20b",
+    "numSamples": 1,
+    "numCorrect": 0,
+    "pass1": 0,
+    "pass10": 0,
+    "context": {
+      "used": false,
+      "content": ""
+    },
+    "samples": [
+      {
+        "index": 0,
+        "code": "<svelte:options runes={true} />\n\n<script>\n  const number = $state(5);\n  const doubled = $derived(() => number * 2);\n  function increment() {\n    number += 1;\n  }\n</script>\n\n\n<button data-testid=\"increment-button\" on:click={increment}>Increment</button>\n\n\n<div>\n  <p data-testid=\"number-value\">Number: {number}</p>\n  <p data-testid=\"doubled-value\">Doubled: {doubled}</p>\n  <button data-testid=\"increment-button\" on:click={increment}>Increment</button>\n</div>",
+        "success": false,
+        "errors": [
+          "tmp/samples/lmstudio/Component.svelte:7:4 Cannot assign to constant\nhttps://svelte.dev/e/constant_assignment"
+        ],
+        "temperature": 0
+      }
+    ]
+  },
+  {
+    "testName": "derived-by",
+    "provider": "LMStudio",
+    "modelId": "openai/gpt-oss-20b",
+    "numSamples": 1,
+    "numCorrect": 0,
+    "pass1": 0,
+    "pass10": 0,
+    "context": {
+      "used": false,
+      "content": ""
+    },
+    "samples": [
+      {
+        "index": 0,
+        "code": "<svelte:options runes={true} />\n\n<div>\n  <input data-testid=\"text-input\" type=\"text\" bind:value={text} />\n  <button data-testid=\"clear-button\" on:click={() => text = ''}>Clear</button>\n  <div>\n    <p data-testid=\"word-count\">Words: {derived.words}</p>\n    <p data-testid=\"char-count\">Characters: {derived.chars}</p>\n    <p data-testid=\"length-indicator\">Status: {derived.isLong ? 'Long text' : 'Short text'}</p>\n  </div>\n</div>",
+        "success": false,
+        "errors": [
+          "tmp/samples/lmstudio/Component.svelte:4:58 Can only bind to state or props\nhttps://svelte.dev/e/bind_invalid_value"
+        ],
+        "temperature": 0
+      }
+    ]
+  },
+  {
+    "testName": "each",
+    "provider": "LMStudio",
+    "modelId": "openai/gpt-oss-20b",
+    "numSamples": 1,
+    "numCorrect": 0,
+    "pass1": 0,
+    "pass10": 0,
+    "context": {
+      "used": false,
+      "content": ""
+    },
+    "samples": [
+      {
+        "index": 0,
+        "code": "<svelte:options runes={true} />\n\n<script>\n  const characters = $state([\"Jerry\", \"Elaine\", \"Kramer\"]);\n  function addGeorge() {\n    characters.push(\"George\");\n  }\n</script>\n\n\n<div>\n  <ul data-testid=\"characters-list\">\n    {#each characters as character}\n      <li data-testid=\"character\">{character}</li>\n    {/each}\n  </ul>\n  <button data-testid=\"add-george-button\" on:click={addGeorge}>Add George</button>\n</div>\n\n\n\n\n\n<div>\n  <ul data-testid=\"characters-list\">\n    {#each characters as character}\n      <li data-testid=\"character\">{character}</li>\n    {/each}\n  </ul>\n  <button data-testid=\"add-george-button\" on:click={addGeorge}>Add George</button>\n</div>",
+        "success": false,
+        "errors": [
+          "expected 6 to be 3 // Object.is equality",
+          "expected 6 to be 3 // Object.is equality"
+        ],
+        "temperature": 0
+      }
+    ]
+  },
+  {
+    "testName": "effect",
+    "provider": "LMStudio",
+    "modelId": "openai/gpt-oss-20b",
+    "numSamples": 1,
+    "numCorrect": 0,
+    "pass1": 0,
+    "pass10": 0,
+    "context": {
+      "used": false,
+      "content": ""
+    },
+    "samples": [
+      {
+        "index": 0,
+        "code": "<svelte:options runes={true} />\n\n<script>\n  const number = $state(5);\n  let doubled = 0;\n\n  $effect(() => {\n    doubled = number * 2;\n  });\n\n  function increment() {\n    number += 1;\n  }\n</script>\n\n<div>\n  <p data-testid=\"number-value\">Number: {number}</p>\n  <p data-testid=\"doubled-value\">Doubled: {doubled}</p>\n  <button data-testid=\"increment-button\" on:click={increment}>Increment</button>\n</div>\n\n\n\n\n\n\n<div>\n  <p data-testid=\"number-value\">Number: {number}</p>\n  <p data-testid=\"doubled-value\">Doubled: {doubled}</p>\n  <button data-testid=\"increment-button\" on:click={increment}>Increment</button>\n</div>",
+        "success": false,
+        "errors": [
+          "tmp/samples/lmstudio/Component.svelte:12:4 Cannot assign to constant\nhttps://svelte.dev/e/constant_assignment"
+        ],
+        "temperature": 0
+      }
+    ]
+  },
+  {
+    "testName": "hello-world",
+    "provider": "LMStudio",
+    "modelId": "openai/gpt-oss-20b",
+    "numSamples": 1,
+    "numCorrect": 0,
+    "pass1": 0,
+    "pass10": 0,
+    "context": {
+      "used": false,
+      "content": ""
+    },
+    "samples": [
+      {
+        "index": 0,
+        "code": "<svelte:options runes={true} />\n\n<script>\n</script>\n\n<style>\n</style>\n\n<div data-testid=\"greeting\" class=\"greeting\">Hello, World!</div>\n\n\n\n\n\n</style>\n\n<div data-testid=\"greeting\" class=\"greeting\">Hello, World!</div>",
+        "success": false,
+        "errors": [
+          "/Users/Abhijeet.Karpe/apps/svelte-bench/tmp/samples/lmstudio/Component.svelte:15:0 `</style>` attempted to close an element that was not open\nhttps://svelte.dev/e/element_invalid_closing_tag"
+        ],
+        "temperature": 0
+      }
+    ]
+  },
+  {
+    "testName": "inspect",
+    "provider": "LMStudio",
+    "modelId": "openai/gpt-oss-20b",
+    "numSamples": 1,
+    "numCorrect": 0,
+    "pass1": 0,
+    "pass10": 0,
+    "context": {
+      "used": false,
+      "content": ""
+    },
+    "samples": [
+      {
+        "index": 0,
+        "code": "<svelte:options runes={true} />\n\n<script>\n  import { $state, $inspect, $effect } from 'svelte/internal'; // but the prompt says runes like $state and $inspect are built-in, never imported. So we don't import them. Just use them.\n\n  const text = $state(\"Hello world\");\n\n  // Basic $inspect to log the input value\n  $inspect(text);\n\n  // $inspect(...).with to track updates with custom callback\n  $inspect(text).with((newVal, oldVal) => {\n    console.log('Text changed from', oldVal, 'to', newVal);\n  });\n\n  // $inspect.trace() inside an effect that runs when input changes\n  $effect(() => {\n    $inspect.trace(text);\n  });\n</script>\n\n\n\n\n\n\n\n\n\n\n<script>\n  const text = $state(\"Hello world\");\n\n  // Basic inspect\n  $inspect(text);\n\n  // Inspect with custom callback\n  $inspect(text).with((newVal, oldVal) => {\n    console.log('Text changed from', oldVal, 'to', newVal);\n  });\n\n  // Effect to trace changes\n  $effect(() => {\n    $inspect.trace(text);\n  });\n</script>\n\n<div>\n  <input data-testid=\"text-input\" type=\"text\" bind:value={text} />\n  <p data-testid=\"text-value\">Current text: {text}</p>\n  <p data-testid=\"char-count\">Character count: {text.length}</p>\n</div>\n\n\n\n\n\n\n\n<script>\n  const text = $state(\"Hello world\");\n\n  $inspect(text);\n\n  $inspect(text).with((newVal, oldVal) => {\n    console.log('Text changed from', oldVal, 'to', newVal);\n  });\n\n  $effect(() => {\n    $inspect.trace(text);\n  });\n</script>\n\n<div>\n  <input data-testid=\"text-input\" type=\"text\" bind:value={text} />\n  <p data-testid=\"text-value\">Current text: {text}</p>\n  <p data-testid=\"char-count\">Character count: {text.length}</p>\n</div>\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n<div>\n  <input data-testid=\"text-input\" type=\"text\" bind:value={text} />\n  <p data-testid=\"text-value\">Current text: {text}</p>\n  <p data-testid=\"char-count\">Character count: {text.length}</p>\n</div>",
+        "success": false,
+        "errors": [
+          "/Users/Abhijeet.Karpe/apps/svelte-bench/tmp/samples/lmstudio/Component.svelte:31:0 A component can have a single top-level `<script>` element and/or a single top-level `<script module>` element\nhttps://svelte.dev/e/script_duplicate"
+        ],
+        "temperature": 0
+      }
+    ]
+  },
+  {
+    "testName": "props",
+    "provider": "LMStudio",
+    "modelId": "openai/gpt-oss-20b",
+    "numSamples": 1,
+    "numCorrect": 0,
+    "pass1": 0,
+    "pass10": 0,
+    "context": {
+      "used": false,
+      "content": ""
+    },
+    "samples": [
+      {
+        "index": 0,
+        "code": "<svelte:options runes={true} />\n\n<script>\n  $props name=\"World\" count=0 showDetails=false\n  $state count = $props.count\n</script>\n\n\n\n<script>\n  $props name=\"World\" count=0 showDetails=false\n  $state count = $props.count\n</script>\n\n\n\n\n\n\n\n\n\n<script>\n  $props name=\"World\" count=0 showDetails=false\n  $state count = $props.count\n</script>\n\n<div>\n  <h1 data-testid=\"name-display\">Hello, {$props.name}!</h1>\n  <p data-testid=\"count-display\">Count: {count}</p>\n  <button data-testid=\"increment-button\" on:click={() => count += 1}>Increment</button>\n\n  {#if $props.showDetails}\n    <div data-testid=\"details\">\n      <p>Name is {$props.name}</p>\n      <p>Count is {count}</p>\n      <p>ShowDetails is true</p>\n    </div>\n  {/if}\n</div>\n\n\n\n\n\n\n<div>\n  <h1 data-testid=\"name-display\">Hello, {$props.name}!</h1>\n  <p data-testid=\"count-display\">Count: {count}</p>\n  <button data-testid=\"increment-button\" on:click={() => count += 1}>Increment</button>\n\n  {#if $props.showDetails}\n    <div data-testid=\"details\">\n      <p>Name is {$props.name}</p>\n      <p>Count is {count}</p>\n      <p>ShowDetails is {$props.showDetails}</p>\n    </div>\n  {/if}\n</div>",
+        "success": false,
+        "errors": [
+          "/Users/Abhijeet.Karpe/apps/svelte-bench/tmp/samples/lmstudio/Component.svelte:4:9 Unexpected token\nhttps://svelte.dev/e/js_parse_error"
+        ],
+        "temperature": 0
+      }
+    ]
+  },
+  {
+    "testName": "snippets",
+    "provider": "LMStudio",
+    "modelId": "openai/gpt-oss-20b",
+    "numSamples": 1,
+    "numCorrect": 0,
+    "pass1": 0,
+    "pass10": 0,
+    "context": {
+      "used": false,
+      "content": ""
+    },
+    "samples": [
+      {
+        "index": 0,
+        "code": "<svelte:options runes={true} />\n\n{@snippet greet(name)}\n  <p>Hello {name}!</p>\n{/snippet}\n\n\n\n<script>\n  const books = [\n    \"The Lord of the Rings\",\n    \"To Kill a Mockingbird\",\n    \"1984\"\n  ];\n</script>\n\n<ul>\n  {#each books as book}\n    <li data-testid=\"book-item\">{@render title(book)}</li>\n  {/each}\n</ul>\n\n{@snippet title(title)}\n  <span data-testid=\"book-title\">{title}</span>\n{/snippet}\n\n\n\n\n\n<script>\n  const books = [\n    \"The Lord of the Rings\",\n    \"To Kill a Mockingbird\",\n    \"1984\"\n  ];\n</script>\n\n<ul>\n  {#each books as book}\n    <li data-testid=\"book-item\">{@render title(book)}</li>\n  {/each}\n</ul>\n\n{@snippet title(bookTitle)}\n  <span data-testid=\"book-title\">{bookTitle}</span>\n{/snippet}\n\n{@snippet title(bookTitle)}\n  <span data-testid=\"book-title\">{bookTitle}</span>\n{/snippet}\n\n\n\n\n\n<ul>\n  {#each books as book}\n    <li data-testid=\"book-item\">{@render title(book)}</li>\n  {/each}\n</ul>\n\n{@snippet title(bookTitle)}\n  <span data-testid=\"book-title\">{bookTitle}</span>\n{/snippet}",
+        "success": false,
+        "errors": [
+          "/Users/Abhijeet.Karpe/apps/svelte-bench/tmp/samples/lmstudio/Component.svelte:5:1 Unexpected block closing tag\nhttps://svelte.dev/e/block_unexpected_close"
+        ],
+        "temperature": 0
+      }
+    ]
+  }
+]
